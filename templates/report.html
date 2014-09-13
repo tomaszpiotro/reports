@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Report</title>
+        {% load staticfiles %}
+
+    <script type="text/javascript" src = "{% static 'assets/js/jquery.min.js' %} "></script>
+    <script type="text/javascript" src = "{% static 'js/highcharts/highcharts.js' %} "></script>
+
+        <style type="text/css">
+            #chart {
+                    background-color: #fca9a9;
+                    width: 30%;
+                    height: 150px;
+                    line-height: 50px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                 }
+        </style>
+
+
+</head>
+<body bgcolor="lightblue">
+<div id="chart"> {{ chart.as_html }}</div>
+<table border="1" align="center" cellpadding="2" cellspacing="0" bgcolor="orange" bordercolor="darkblue">
+    <td align="center" colspan="9"> <font size="5"> Report from <b>{{report.date}} </b> </font></td>
+<tr>
+    <th align="center"> id </th>
+    <th align="center"> protocol </th>
+    <th align="center"> remote host </th>
+    <th align="center"> remote port </th>
+    <th align="center"> local host </th>
+    <th align="center"> local port </th>
+    <th align="center"> count </th>
+    <th align="center"> interesting </th>
+    <th align="center"> prev occurrences </th>
+
+</tr>
+
+    {% for freq_item in reports_fitemsets %}
+<tr>
+    <td align="center"> <a href="/reports/get/{{ report.id }}/{{freq_item.0.id}}" > {{freq_item.0.id}} </a></td>
+    <td align="center"> {{freq_item.0.protocol}} </td>
+    <td align="center"> {{freq_item.0.remote_host}} </td>
+    <td align="center"> {{freq_item.0.remote_port}} </td>
+    <td align="center"> {{freq_item.0.local_host}} </td>
+    <td align="center"> {{freq_item.0.local_port}} </td>
+    <td align="center"> {{freq_item.0.count}} </td>
+    <td align="center"> {{freq_item.0.interesting}} </td>
+    <td align="center"> {{freq_item.1}} </td>
+</tr>
+    {% endfor %}
+</table>
+
+<script>
+$(window).scroll(function(){
+  $("#chart").stop().animate({"marginTop": ($(window).scrollTop()) + "px", "marginLeft":($(window).scrollLeft()) + "px"}, "slow" );});
+</script>
+</body>
+</html>

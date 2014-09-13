@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports</title>
+</head>
+<body bgcolor="lightblue">
+<table width ="700" border="1" align="center" cellpadding="2" cellspacing="0" bgcolor="orange" bordercolor="darkblue">
+<tr>
+    <th align="center"> Report Date </th>
+    <th align="center"> Time range </th>
+    <th align="center"> Freq itemsets </th>
+
+</tr>
+
+{% for report in reports %}
+<tr>
+    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.date}}</a> </td>
+    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.interval}} h</a> </td>
+    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.1}} </a> </td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
