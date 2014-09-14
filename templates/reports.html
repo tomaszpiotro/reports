@@ -14,7 +14,7 @@
 
 {% for report in reports %}
 <tr>
-    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.date}}</a> </td>
+    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.date|date:"d M Y H:i"}} - {{report.2|date:"d M Y H:i"}}</a> </td>
     <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.interval}} h</a> </td>
     <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.1}} </a> </td>
 </tr>

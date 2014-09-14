@@ -8,11 +8,9 @@
     <script type="text/javascript" src = "{% static 'js/highcharts/highcharts.js' %} "></script>
 
         <style type="text/css">
-            #chart {
-                    background-color: #fca9a9;
-                    width: 30%;
-                    height: 150px;
-                    line-height: 50px;
+            #moving_bar {
+                    background-color: rgba(100, 100, 100, 0);
+                    width: 100%;
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -22,9 +20,13 @@
 
 </head>
 <body bgcolor="lightblue">
-<div id="chart"> {{ chart.as_html }}</div>
+<div id="moving_bar">
+    <button type="button" id="hide_button"> Toggle chart</button>
+    <div id = 'chart'> </div>
+</div>
+
 <table border="1" align="center" cellpadding="2" cellspacing="0" bgcolor="orange" bordercolor="darkblue">
-    <td align="center" colspan="9"> <font size="5"> Report from <b>{{report.date}} </b> </font></td>
+    <td align="center" colspan="9"> <font size="5"> Report from <b>{{report.date|date:"d-m-Y H:i" }} to {{end_date|date:"d-m-Y H:i"}} ({{report.interval}} hours)</b> </font></td>
 <tr>
     <th align="center"> id </th>
     <th align="center"> protocol </th>
@@ -39,8 +41,8 @@
 </tr>
 
     {% for freq_item in reports_fitemsets %}
-<tr>
-    <td align="center"> <a href="/reports/get/{{ report.id }}/{{freq_item.0.id}}" > {{freq_item.0.id}} </a></td>
+<tr onclick="paint{{freq_item.0.id}}();">
+    <td align="center"> {{freq_item.0.id}} </td>
     <td align="center"> {{freq_item.0.protocol}} </td>
     <td align="center"> {{freq_item.0.remote_host}} </td>
     <td align="center"> {{freq_item.0.remote_port}} </td>
@@ -48,14 +50,85 @@
     <td align="center"> {{freq_item.0.local_port}} </td>
     <td align="center"> {{freq_item.0.count}} </td>
     <td align="center"> {{freq_item.0.interesting}} </td>
-    <td align="center"> {{freq_item.1}} </td>
+    <td align="center"><span id='{{freq_item.0.id}}'>{{freq_item.1}} </span> </td>
 </tr>
     {% endfor %}
 </table>
 
 <script>
 $(window).scroll(function(){
-  $("#chart").stop().animate({"marginTop": ($(window).scrollTop()) + "px", "marginLeft":($(window).scrollLeft()) + "px"}, "slow" );});
+  $("#moving_bar").stop().animate({"marginTop": ($(window).scrollTop()) + "px", "marginLeft":($(window).scrollLeft()) + "px"}, "slow" );});
+</script>
+
+{% for id,occurrence in occurrences.items %}
+<script>
+function paint{{id}}(){
+window.lastChart='paint{{id}}'
+$('#chart').highcharts({
+        chart: {
+            zoomType: 'x'
+        },
+        title: {
+            text: 'occurrences {{id}}'
+        },
+        subtitle: {
+            text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in'
+        },
+        xAxis: {
+            type: 'datetime',
+            minRange: 14 * 24 * 3600000 // fourteen days
+        },
+        yAxis: {
+            title: {
+                text: 'number of occurrences'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    enabled: false
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+
+        series: [{
+            type: 'area',
+            name: 'occurrences',
+            pointInterval: 24 * 3600 * 1000,
+            pointStart: Date.UTC({{occurrence.start_date.year}}, {{occurrence.start_date.month}}, {{occurrence.start_date.day}}),
+            data: {{occurrence.data}}
+        }]
+    })
+}
+</script>
+
+{% endfor %}
+
+<script>
+    $('#hide_button').click(function() {
+    $('#chart').slideToggle();
+    var fn = window[window.lastChart];
+    fn();
+});
 </script>
 </body>
 </html>
