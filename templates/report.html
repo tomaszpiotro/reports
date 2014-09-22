@@ -1,56 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <title>Report</title>
-        {% load staticfiles %}
+    <title>Report</title>
+    {% load staticfiles %}
 
     <script type="text/javascript" src = "{% static 'assets/js/jquery.min.js' %} "></script>
     <script type="text/javascript" src = "{% static 'js/highcharts/highcharts.js' %} "></script>
-
-        <style type="text/css">
-            #moving_bar {
-                    background-color: rgba(100, 100, 100, 0);
-                    width: 100%;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                 }
-        </style>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/basic.css'%}">
 
 </head>
-<body bgcolor="lightblue">
+
+<body>
 <div id="moving_bar">
     <button type="button" id="hide_button"> Toggle chart</button>
     <div id = 'chart'> </div>
 </div>
 
-<table border="1" align="center" cellpadding="2" cellspacing="0" bgcolor="orange" bordercolor="darkblue">
-    <td align="center" colspan="9"> <font size="5"> Report from <b>{{report.date|date:"d-m-Y H:i" }} to {{end_date|date:"d-m-Y H:i"}} ({{report.interval}} hours)</b> </font></td>
+<table>
+    <th colspan="9">Report from {{report.date|date:"d-m-Y H:i" }} to {{end_date|date:"d-m-Y H:i"}} ({{report.interval}} hours)</th>
 <tr>
-    <th align="center"> id </th>
-    <th align="center"> protocol </th>
-    <th align="center"> remote host </th>
-    <th align="center"> remote port </th>
-    <th align="center"> local host </th>
-    <th align="center"> local port </th>
-    <th align="center"> count </th>
-    <th align="center"> interesting </th>
-    <th align="center"> prev occurrences </th>
-
+    <th> id </th>
+    <th> protocol </th>
+    <th> remote host </th>
+    <th> remote port </th>
+    <th> local host </th>
+    <th> local port </th>
+    <th> count </th>
+    <th> interesting </th>
+    <th> prev occurrences </th>
 </tr>
 
     {% for freq_item in reports_fitemsets %}
 <tr onclick="paint{{freq_item.0.id}}();">
-    <td align="center"> {{freq_item.0.id}} </td>
-    <td align="center"> {{freq_item.0.protocol}} </td>
-    <td align="center"> {{freq_item.0.remote_host}} </td>
-    <td align="center"> {{freq_item.0.remote_port}} </td>
-    <td align="center"> {{freq_item.0.local_host}} </td>
-    <td align="center"> {{freq_item.0.local_port}} </td>
-    <td align="center"> {{freq_item.0.count}} </td>
-    <td align="center"> {{freq_item.0.interesting}} </td>
-    <td align="center"><span id='{{freq_item.0.id}}'>{{freq_item.1}} </span> </td>
+    <td> <a href="javascript:;" >{{freq_item.0.id}} </a></td>
+    <td title="number of same occurrences with no protocol: {{freq_item.2.same_without_protocol}} "> {{freq_item.0.protocol}} </td>
+    <td title="number of same occurrences with no remote host: {{freq_item.2.same_without_remote_host}} "> {{freq_item.0.remote_host}} </td>
+    <td title="number of same occurrences with no remote port: {{freq_item.2.same_without_remote_port}} "> {{freq_item.0.remote_port}} </td>
+    <td> {{freq_item.0.local_host}} </td>
+    <td title="number of same occurrences with no local port: {{freq_item.2.same_without_local_port}} "> {{freq_item.0.local_port}} </td>
+    <td title="number of same occurrences with no count: {{freq_item.2.same_without_count}} "> {{freq_item.0.count}} </td>
+    <td title="number of same occurrences with no interesting: {{freq_item.2.same_without_interesting}} "> {{freq_item.0.interesting}} </td>
+    <td> <span id='{{freq_item.0.id}}'>{{freq_item.1}} </span> </td>
 </tr>
     {% endfor %}
 </table>
@@ -129,6 +119,17 @@ $('#chart').highcharts({
     var fn = window[window.lastChart];
     fn();
 });
+</script>
+<script>
+    $(document).tooltip({
+        items:"[title]",
+        content: function(){
+            var element = $(this);
+            if( element.is("[title]") ){
+                return element.attr("title");
+            }
+        }
+    }
 </script>
 </body>
 </html>

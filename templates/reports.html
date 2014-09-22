@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load staticfiles %}
     <title>Reports</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/basic.css'%}">
+
 </head>
-<body bgcolor="lightblue">
-<table width ="700" border="1" align="center" cellpadding="2" cellspacing="0" bgcolor="orange" bordercolor="darkblue">
-<tr>
-    <th align="center"> Report Date </th>
-    <th align="center"> Time range </th>
-    <th align="center"> Freq itemsets </th>
+<body>
+<div id="table">
+    <table>
+        <tr>
+            <th> Report Date </th>
+            <th> Time range </th>
+            <th> Freq itemsets </th>
+        </tr>
 
-</tr>
+        {% for report in reports %}
+        <tr>
+            <td><a href="/report/{{ report.0.id }}/" >{{report.0.date|date:"d M Y H:i"}} - {{report.2|date:"d M Y H:i"}}</a> </td>
+            <td><a href="/report/{{ report.0.id }}/" >{{report.0.interval}} h</a> </td>
+            <td><a href="/report/{{ report.0.id }}/" >{{report.1}} </a> </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<br>
+<div class="pagination">
+    <table>
+        <tr>
+            {% if reports.has_previous %}
+                <td>
+                    <a href="?page={{ reports.previous_page_number }}"> previous </a>
+                </td>
+            {% endif %}
+            <td>
+                Page {{reports.number }} of {{ reports.paginator.num_pages }}
+            </td>
+            {% if reports.has_next %}
+            <td>
+                <a href="?page={{ reports.next_page_number }}"> next</a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
 
-{% for report in reports %}
-<tr>
-    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.date|date:"d M Y H:i"}} - {{report.2|date:"d M Y H:i"}}</a> </td>
-    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.0.interval}} h</a> </td>
-    <td align="center"><a href="/report/{{ report.0.id }}/" >{{report.1}} </a> </td>
-</tr>
-{% endfor %}
-</table>
+</div>
 </body>
 </html>
