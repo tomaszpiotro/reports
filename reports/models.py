@@ -19,6 +19,7 @@ class Operations(models.Model):
     interval = models.IntegerField()
     request_id = models.IntegerField()
     tag = models.CharField(max_length=32)
+
     class Meta:
         db_table = u'operations'
 
@@ -40,7 +41,7 @@ class FreqItemsets(models.Model):
         db_table = u'freq_itemsets'
 
 
-class Reports_fitemsets(models.Model):
+class ReportsFitemsets(models.Model):
     report = models.OneToOneField(Report)
     fitemset = models.OneToOneField(FreqItemsets)
     same_without_protocol = models.IntegerField()

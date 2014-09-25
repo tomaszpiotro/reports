@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from reports.models import Report
-from reports.models import Reports_fitemsets
+from reports.models import ReportsFitemsets
 from reports.models import FreqItemsets
 from reports.models import PrevOccurrences
 import itertools
@@ -13,7 +13,7 @@ def all_reports(request):
     rep = Report.objects.all().order_by('date').reverse()
     reports_list = []
     for r in rep:
-        reports_list.append((r, Reports_fitemsets.objects.filter(report_id=r.id).count(),
+        reports_list.append((r, ReportsFitemsets.objects.filter(report_id=r.id).count(),
                              r.date+datetime.timedelta(hours=r.interval)))
     paginator = Paginator(reports_list, 100)
     page = request.GET.get('page')
@@ -28,7 +28,7 @@ def all_reports(request):
 
 def report(request, report_id=1):
     reportt = Report.objects.get(id=report_id)
-    reports_fitemsets = Reports_fitemsets.objects.filter(report_id=report_id)
+    reports_fitemsets = ReportsFitemsets.objects.filter(report_id=report_id)
     fitemsets = []
     for f in reports_fitemsets:
         fitemsets.append(FreqItemsets.objects.get(id=f.fitemset_id))

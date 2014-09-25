@@ -22,7 +22,6 @@ def convert2str(record):
         else:  # for numeric values
             res.append(str(item))
     result = ','.join(res)
-    print result
     return result
 
 
@@ -42,7 +41,6 @@ def copy_table(source_table_name, dest_table_name):
     cur2.execute("SELECT * FROM %s where id > %s;" % (source_table_name, max_id.__str__()))
     for row in cur2.fetchall():
         val_str = convert2str(row)
-        print str(tuple(row))
         cur1.execute("INSERT INTO %s VALUES (%s)" % (dest_table_name, val_str))
 
     conn2.commit()

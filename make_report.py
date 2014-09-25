@@ -38,7 +38,6 @@ cur3 = conn1.cursor()
 
 now = datetime.datetime.now()
 min_time = now - timedelta(hours=interval)
-print min_time
 
 cur1.execute("select f.id, f.protocol, f.remote_host, f.remote_port, f.local_port, f.count, f.interesting "
              "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s '" % min_time)
@@ -46,7 +45,6 @@ cur1.execute("select f.id, f.protocol, f.remote_host, f.remote_port, f.local_por
 insert_string = "insert into reports (date, interval) values (%s, %s) returning id"
 cur2.execute(insert_string, (now, interval))
 inserted_report_id = cur2.fetchone()[0]
-print "asdasdasd " + inserted_report_id.__str__()
 
 for row in cur1.fetchall():
     evaluated_row = tuple_evaluate(row)
