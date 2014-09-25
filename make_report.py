@@ -24,7 +24,7 @@ def tuple_evaluate(t):
     return remove_index_from_tuple(tuple(lst), 0)
 
 
-interval = 10
+interval = 2
 print "running report script. Hours: " + interval.__str__()
 
 conn1 = psycopg2.connect(database="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
