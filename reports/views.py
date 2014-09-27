@@ -31,7 +31,7 @@ def report(request, report_id=1):
     reports_fitemsets = ReportsFitemsets.objects.filter(report_id=report_id)
     fitemsets = []
     for f in reports_fitemsets:
-        fitemsets.append(FreqItemsets.objects.get(id=f.fitemset_id))
+        fitemsets.append(FreqItemsets.objects.using('miner').get(id=f.fitemset_id))
     occurrences = PrevOccurrences.objects.filter(report=report_id)
     sets = []
     occurrences_map = {}

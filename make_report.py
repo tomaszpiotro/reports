@@ -24,17 +24,16 @@ def tuple_evaluate(t):
     return remove_index_from_tuple(tuple(lst), 0)
 
 
-interval = 2
+interval = 24
 print "running report script. Hours: " + interval.__str__()
 
-conn1 = psycopg2.connect(database="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
+conn1 = psycopg2.connect(dbname="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
 cur1 = conn1.cursor()
-
-conn2 = psycopg2.connect(database="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
 cur2 = conn1.cursor()
 
-conn3 = psycopg2.connect(database="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
-cur3 = conn1.cursor()
+conn2 = psycopg2.connect(database="tpiotrowski", dbname="tpiotrowski", user="postgres", password="qwerty1asd", host="localhost")
+
+cur3 = conn2.cursor()
 
 now = datetime.datetime.now()
 min_time = now - timedelta(hours=interval)
@@ -43,8 +42,9 @@ cur1.execute("select f.id, f.protocol, f.remote_host, f.remote_port, f.local_por
              "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s '" % min_time)
 
 insert_string = "insert into reports (date, interval) values (%s, %s) returning id"
-cur2.execute(insert_string, (now, interval))
-inserted_report_id = cur2.fetchone()[0]
+cur3.execute(insert_string, (now, interval))
+inserted_report_id = cur3.fetchone()[0]
+print inserted_report_id
 
 for row in cur1.fetchall():
     evaluated_row = tuple_evaluate(row)
@@ -68,7 +68,7 @@ for row in cur1.fetchall():
     same_without_interesting = cur2.fetchone()[0]
 
     final_values = (inserted_report_id, row[0], same_without_protocol, same_without_remote_host, same_without_remote_port, same_without_local_port, same_without_count, same_without_interesting)
-    cur2.execute("insert into reports_fitemsets (report_id, fitemset_id, same_without_protocol, same_without_remote_host, same_without_remote_port, same_without_local_port, same_without_count, "
+    cur3.execute("insert into reports_fitemsets (report_id, fitemset_id, same_without_protocol, same_without_remote_host, same_without_remote_port, same_without_local_port, same_without_count, "
                  "same_without_interesting) values(%s, %s, %s, %s, %s, %s, %s, %s)" % final_values)
 
 
@@ -87,8 +87,7 @@ conn1.close()
 
 conn2.commit()
 cur2.close()
+cur3.close()
 conn2.close()
 
-conn3.commit()
-cur3.close()
-conn3.close()
+
