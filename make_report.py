@@ -26,11 +26,10 @@ def tuple_evaluate(t):
 
 if __name__ == '__main__':
     if sys.argv.__len__() > 1 and sys.argv[1].isdigit():
-        interval = sys.argv[1]
+        interval = int(sys.argv[1])
     else:
         interval = 1
     print "running report script. Hours: " + interval.__str__()
-
     conn1 = psycopg2.connect(dbname="miner_copy", user="postgres", password="qwerty1asd", host="localhost")
     cur1 = conn1.cursor()
     cur2 = conn1.cursor()
@@ -48,7 +47,6 @@ if __name__ == '__main__':
     insert_string = "insert into reports (date, interval) values (%s, %s) returning id"
     cur3.execute(insert_string, (now, interval))
     inserted_report_id = cur3.fetchone()[0]
-    print inserted_report_id
 
     for row in cur1.fetchall():
         evaluated_row = tuple_evaluate(row)
