@@ -1,3 +1,5 @@
 static2/
 .*
 !/.gitignore
+*.pyc
+
