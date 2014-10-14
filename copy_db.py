@@ -38,11 +38,14 @@ def copy_table(source_table_name, dest_table_name):
         max_id = 0
         print "None"
 
+    rows_count = 0
     cur2.execute("SELECT * FROM %s where id > %s;" % (source_table_name, max_id.__str__()))
     for row in cur2.fetchall():
         val_str = convert2str(row)
+        rows_count += 1
         cur1.execute("INSERT INTO %s VALUES (%s)" % (dest_table_name, val_str))
 
+    print "Copied %s rows from %s." % (rows_count, source_table_name)
     conn2.commit()
     cur2.close()
     conn2.close()
