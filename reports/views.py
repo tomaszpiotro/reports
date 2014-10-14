@@ -7,6 +7,7 @@ import itertools
 from types import Occurrences
 import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
 
 
 def all_reports(request):
@@ -27,7 +28,7 @@ def all_reports(request):
 
 
 def report(request, report_id=1):
-    reportt = Report.objects.get(id=report_id)
+    reportt = get_object_or_404(Report, id=report_id)
     reports_fitemsets = ReportsFitemsets.objects.filter(report_id=report_id)
     fitemsets = []
     for f in reports_fitemsets:
