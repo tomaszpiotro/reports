@@ -3,7 +3,7 @@ import datetime
 from datetime import timedelta
 
 
-def daterange(start_date, end_date):
+def date_range(start_date, end_date):
     for n in range(int((end_date - start_date).days)+1):
         yield start_date + timedelta(n)
 
@@ -24,7 +24,7 @@ class Occurrences():
             self.start_date = datetime.datetime.strptime(occurrences_by_day[0][0], '%Y-%m-%d').date()
             self.end_date = datetime.datetime.strptime(occurrences_by_day[-1][0], '%Y-%m-%d').date()
             dates_only = [i[0] for i in occurrences_by_day]
-            for single_date in daterange(self.start_date, self.end_date):
+            for single_date in date_range(self.start_date, self.end_date):
                 date = time.strftime("%Y-%m-%d", single_date.timetuple())
                 if date in dates_only:
                     index = dates_only.index(date)
