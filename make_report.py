@@ -42,7 +42,7 @@ if __name__ == '__main__':
     min_time = now - timedelta(hours=interval)
 
     cur1.execute("select f.id, f.protocol, f.remote_host, f.remote_port, f.local_port, f.count, f.interesting "
-                 "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s '" % min_time)
+                 "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s ' and f.generator = false" % min_time)
 
     insert_string = "insert into reports (date, interval) values (%s, %s) returning id"
     cur3.execute(insert_string, (now, interval))
@@ -51,22 +51,22 @@ if __name__ == '__main__':
     for row in cur1.fetchall():
         evaluated_row = tuple_evaluate(row)
         insert_values = remove_index_from_tuple(evaluated_row, 0)
-        cur2.execute("select count(*) from freq_itemsets where remote_host %s and remote_port %s and local_port %s and count %s and interesting %s" % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where remote_host %s and remote_port %s and local_port %s and count %s and interesting %s and generator = false" % insert_values)
         same_without_protocol = cur2.fetchone()[0]
         insert_values = remove_index_from_tuple(evaluated_row, 1)
-        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_port %s and local_port %s and count %s and interesting %s " % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_port %s and local_port %s and count %s and interesting %s and generator = false" % insert_values)
         same_without_remote_host = cur2.fetchone()[0]
         insert_values = remove_index_from_tuple(evaluated_row, 2)
-        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and local_port %s and count %s and interesting %s " % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and local_port %s and count %s and interesting %s and generator = false" % insert_values)
         same_without_remote_port = cur2.fetchone()[0]
         insert_values = remove_index_from_tuple(evaluated_row, 3)
-        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and count %s and interesting %s" % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and count %s and interesting %s and generator = false" % insert_values)
         same_without_local_port = cur2.fetchone()[0]
         insert_values = remove_index_from_tuple(evaluated_row, 4)
-        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and local_port %s and interesting %s" % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and local_port %s and interesting %s and generator = false" % insert_values)
         same_without_count = cur2.fetchone()[0]
         insert_values = remove_index_from_tuple(evaluated_row, 5)
-        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and local_port %s and count %s" % insert_values)
+        cur2.execute("select count(*) from freq_itemsets where protocol %s and remote_host %s and remote_port %s and local_port %s and count %s and generator = false" % insert_values)
         same_without_interesting = cur2.fetchone()[0]
 
         final_values = (inserted_report_id, row[0], same_without_protocol, same_without_remote_host, same_without_remote_port, same_without_local_port, same_without_count, same_without_interesting)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
 
     cur1.execute("select f.id, f.protocol, f.remote_host, f.remote_port, f.local_host, f.local_port, f.count "
-                 "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s '" % min_time)
+                 "from freq_itemsets as f, operations as o where f.oid = o.id and o.end_time > timestamp ' %s ' and f.generator = false" % min_time)
     for row in cur1.fetchall():
         sel = "select o.start_time from operations as o, freq_itemsets as f where f.oid = o.id and f.protocol %s and f.remote_host %s and f.remote_port %s and f.local_host %s and f.local_port %s and f.count %s and o.start_time < timestamp ' %s ' " % (tuple_evaluate(row) + (min_time,))
         cur2.execute(sel)
