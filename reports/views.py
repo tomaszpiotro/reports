@@ -1,13 +1,15 @@
+import datetime
+import itertools
+from types import Occurrences
+
 from django.shortcuts import render_to_response
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
+
 from reports.models import Report
 from reports.models import ReportsFitemsets
 from reports.models import FreqItemsets
 from reports.models import PrevOccurrences
-import itertools
-from types import Occurrences
-import datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import get_object_or_404
 
 
 def all_reports(request):

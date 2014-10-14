@@ -1,7 +1,6 @@
-from models import PrevOccurrences
+import time
 import datetime
 from datetime import timedelta
-import time
 
 
 def daterange(start_date, end_date):
