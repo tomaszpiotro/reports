@@ -25,7 +25,6 @@ class Operations(models.Model):
 
 
 class FreqItemsets(models.Model):
-    id = models.IntegerField(primary_key=True)
     oid = models.ForeignKey(Operations,db_column='oid')
     protocol = models.CharField(max_length=32)
     remote_host = models.IPAddressField()
