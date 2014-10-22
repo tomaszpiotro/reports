@@ -41,7 +41,7 @@ class FreqItemsets(models.Model):
 
 
 class ReportsFitemsets(models.Model):
-    report = models.OneToOneField(Report)
+    report = models.ForeignKey(Report)
     fitemset = models.OneToOneField(FreqItemsets)
     same_without_protocol = models.IntegerField()
     same_without_remote_host = models.IntegerField()
