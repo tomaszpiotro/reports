@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -9,6 +10,12 @@ class Report(models.Model):
 
     class Meta:
         db_table = u'reports'
+
+    def __str__(self):
+        return self.date.__str__()
+
+    def get_end_date(self):
+        return self.date + datetime.timedelta(hours=self.interval)
 
 
 class Operations(models.Model):
@@ -41,7 +48,7 @@ class FreqItemsets(models.Model):
 
 
 class ReportsFitemsets(models.Model):
-    report = models.ForeignKey(Report)
+    report = models.ForeignKey(Report, related_name='reports_fitemsets')
     fitemset = models.OneToOneField(FreqItemsets)
     same_without_protocol = models.IntegerField()
     same_without_remote_host = models.IntegerField()

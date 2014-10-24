@@ -5,6 +5,8 @@ from types import Occurrences
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
+from django.views.generic import ListView
+from django.views.generic import DetailView
 
 from reports.models import Report
 from reports.models import ReportsFitemsets
@@ -50,3 +52,14 @@ def report(request, report_id=1):
     return render_to_response('report.html', {'report': reportt, 'reports_fitemsets': sets,
                                               'occurrences': occurrences_map, 'end_date': end_date})
 
+
+class ReportListView(ListView):
+    queryset = Report.objects.order_by('-date').prefetch_related('reports_fitemsets')
+    paginate_by = 100
+
+
+class DetailReportView(ListView):
+
+    def get_queryset(self):
+        report_id = self.kwargs['report_id']
+        return get_object_or_404(Report, id=report_id)
