@@ -7,6 +7,8 @@
     <script type="text/javascript" src = "{% static 'assets/js/jquery.min.js' %} "></script>
     <script type="text/javascript" src = "{% static 'js/highcharts/highcharts.js' %} "></script>
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/basic.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/orange_table.css'%}">
+
 
 </head>
 
@@ -31,7 +33,7 @@
 </tr>
 
     {% for freq_item in reports_fitemsets %}
-<tr onclick="paint{{freq_item.0.id}}();">
+<tr class="clickable_table_row" onclick="paint{{freq_item.0.id}}();">
     <td> <a href="javascript:;" >{{freq_item.0.id}} </a></td>
     <td title="number of same occurrences with no protocol: {{freq_item.2.same_without_protocol}} "> {{freq_item.0.protocol}} </td>
     <td title="number of same occurrences with no remote host: {{freq_item.2.same_without_remote_host}} "> {{freq_item.0.remote_host}} </td>
