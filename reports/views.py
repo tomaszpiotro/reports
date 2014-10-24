@@ -13,7 +13,7 @@ from reports.models import PrevOccurrences
 
 
 def all_reports(request):
-    rep = Report.objects.all().order_by('date').reverse()
+    rep = Report.objects.all().order_by('-date')
     reports_list = []
     for r in rep:
         reports_list.append((r, ReportsFitemsets.objects.filter(report_id=r.id).count(),
