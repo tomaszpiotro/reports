@@ -1,0 +1,66 @@
+{% load staticfiles %}
+<html>
+
+<head>
+    <title>Reports</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/basic.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/orange_table.css'%}">
+</head>
+
+<body>
+    <div id="table">
+        <table>
+            <tr>
+                <th>
+                    Report Date
+                </th>
+                <th>
+                    Time Range
+                </th>
+                <th>
+                    Freq Itemsets
+                </th>
+            </tr>
+
+            {% for report in object_list %}
+            <tr class="clickable_table_row" onclick="location.href='/mine/{{ report.id }}/'">
+                <td>
+                    {{report.date|date:"d M Y H:i"}} - {{report.get_end_date|date:"d M Y H:i"}}
+                </td>
+                <td>
+                    {{report.interval}} h
+                </td>
+                <td>
+                    {{report.reports_fitemsets.count}}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+
+<br>
+
+<div class="pagination">
+    <table>
+        <tr>
+            {% if page_obj.has_previous %}
+            <td>
+                <a href="?page={{ page_obj.previous_page_number }}"> << Previous </a>
+            </td>
+            {% endif %}
+            <td>
+                Page {{page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </td>
+            {% if page_obj.has_next %}
+            <td>
+                <a href="?page={{ page_obj.next_page_number }}"> Next >></a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+</div>
+
+</body>
+
+</html>

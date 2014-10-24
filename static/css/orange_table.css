@@ -1,0 +1,26 @@
+table, th, td
+{
+    background: Orange;
+    border: thin solid DarkBlue;
+    text-align: center;
+    border-collapse: collapse;
+    margin: auto;
+    padding: 1;
+}
+
+th
+{
+    background: #cc6600;
+    font-size: 110%;
+}
+
+tr.clickable_table_row:nth-child(even) td
+{
+    background: #EBA933;
+}
+
+tr.clickable_table_row:hover td
+{
+    background: OrangeRed;
+    cursor: pointer;
+}
